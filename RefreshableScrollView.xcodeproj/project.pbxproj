@@ -11,6 +11,7 @@
 		A798AAFF27A732470012CE2F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A798AAFE27A732470012CE2F /* ContentView.swift */; };
 		A798AB0127A7324A0012CE2F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A798AB0027A7324A0012CE2F /* Assets.xcassets */; };
 		A798AB0427A7324A0012CE2F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A798AB0327A7324A0012CE2F /* Preview Assets.xcassets */; };
+		A798AB0B27A732D90012CE2F /* RefreshableScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A798AB0A27A732D90012CE2F /* RefreshableScrollView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +20,7 @@
 		A798AAFE27A732470012CE2F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A798AB0027A7324A0012CE2F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A798AB0327A7324A0012CE2F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		A798AB0A27A732D90012CE2F /* RefreshableScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshableScrollView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +55,7 @@
 			children = (
 				A798AAFC27A732470012CE2F /* RefreshableScrollViewApp.swift */,
 				A798AAFE27A732470012CE2F /* ContentView.swift */,
+				A798AB0A27A732D90012CE2F /* RefreshableScrollView.swift */,
 				A798AB0027A7324A0012CE2F /* Assets.xcassets */,
 				A798AB0227A7324A0012CE2F /* Preview Content */,
 			);
@@ -139,6 +142,7 @@
 			files = (
 				A798AAFF27A732470012CE2F /* ContentView.swift in Sources */,
 				A798AAFD27A732470012CE2F /* RefreshableScrollViewApp.swift in Sources */,
+				A798AB0B27A732D90012CE2F /* RefreshableScrollView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
