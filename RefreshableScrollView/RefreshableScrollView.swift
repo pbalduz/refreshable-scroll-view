@@ -6,16 +6,15 @@ struct RefreshableScrollView: View {
     
     private var refreshOffset: CGFloat {
         if isRefreshing {
-            if contentOffset <= 60 {
-                return 60
-            }
-            return 60
+            return max(contentOffset, 60)
         }
-        return 0
+        return max(contentOffset, 0)
     }
     
     var body: some View {
         ZStack(alignment: .top) {
+            Color.orange
+                .frame(height: 60)
             GeometryReader { staticViewProxy in
                 Color.clear
                     .preference(
@@ -29,27 +28,35 @@ struct RefreshableScrollView: View {
                     )
                     .hidden()
             }
-            ScrollView {
+            ZStack(alignment: .top) {
+                VStack(spacing: 0) {
+                    Color.blue
+                        .opacity(0.5)
+                        .frame(height: refreshOffset)
                     VStack {
                         ForEach(0...4, id: \.self) { _ in
                             Color.pink
                                 .frame(height: 60)
                         }
                     }
-                    .background(
-                        GeometryReader { proxy in
-                            Color.clear
-                                .preference(
-                                    key: ScrollOffsetPreferenceTypes.Key.self,
-                                    value: [
-                                        .init(type: .scrollable, offset: proxy.frame(in: .global).minY)
-                                    ]
-                                )
-                        }
-                    )
-                Text("Content offset: \(contentOffset)")
+                    Text("Content offset: \(contentOffset)")
+                }
+                .offset(y: min(contentOffset, 0))
+                ScrollView {
+                    Color.clear
+                        .background(
+                            GeometryReader { proxy in
+                                Color.clear
+                                    .preference(
+                                        key: ScrollOffsetPreferenceTypes.Key.self,
+                                        value: [
+                                            .init(type: .scrollable, offset: proxy.frame(in: .global).minY)
+                                        ]
+                                    )
+                            }
+                        )
+                }
             }
-            .offset(y: refreshOffset)
         }
         .onPreferenceChange(ScrollOffsetPreferenceTypes.Key.self) { values in
             guard
