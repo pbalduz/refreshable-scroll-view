@@ -1,15 +1,9 @@
 import SwiftUI
 
 struct RefreshableScrollView: View {
-    @State private var contentOffset: CGFloat = .zero
+    @State private var scrollViewOffset: CGFloat = .zero
     @State private var isRefreshing: Bool = false
-    
-    private var refreshOffset: CGFloat {
-        if isRefreshing {
-            return max(contentOffset, 60)
-        }
-        return max(contentOffset, 0)
-    }
+    @State private var visibleRefreshOffset: CGFloat = .zero
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -28,34 +22,30 @@ struct RefreshableScrollView: View {
                     )
                     .hidden()
             }
-            ZStack(alignment: .top) {
+            ScrollView {
                 VStack(spacing: 0) {
-                    Color.blue
+                    Color.clear
                         .opacity(0.5)
-                        .frame(height: refreshOffset)
+                        .frame(height: visibleRefreshOffset)
                     VStack {
                         ForEach(0...4, id: \.self) { _ in
                             Color.pink
                                 .frame(height: 60)
                         }
                     }
-                    Text("Content offset: \(contentOffset)")
+                    Text("Content offset: \(scrollViewOffset)")
                 }
-                .offset(y: min(contentOffset, 0))
-                ScrollView {
-                    Color.clear
-                        .background(
-                            GeometryReader { proxy in
-                                Color.clear
-                                    .preference(
-                                        key: ScrollOffsetPreferenceTypes.Key.self,
-                                        value: [
-                                            .init(type: .scrollable, offset: proxy.frame(in: .global).minY)
-                                        ]
-                                    )
-                            }
-                        )
-                }
+                .background(
+                    GeometryReader { proxy in
+                        Color.clear
+                            .preference(
+                                key: ScrollOffsetPreferenceTypes.Key.self,
+                                value: [
+                                    .init(type: .scrollable, offset: proxy.frame(in: .global).minY)
+                                ]
+                            )
+                    }
+                )
             }
         }
         .onPreferenceChange(ScrollOffsetPreferenceTypes.Key.self) { values in
@@ -63,16 +53,23 @@ struct RefreshableScrollView: View {
                 let first = values.first(where: { $0.type == .static }),
                 let last = values.last(where: { $0.type == .scrollable })
             else {
-                contentOffset = 0
+                scrollViewOffset = 0
                 return
             }
-            contentOffset = last.offset - first.offset
+            scrollViewOffset = last.offset - first.offset
             
-            if contentOffset > 80 {
+            if isRefreshing {
+                if scrollViewOffset <= 90 {
+                    visibleRefreshOffset = 60 - 60 * scrollViewOffset / 90
+                }
+            }
+            
+            if scrollViewOffset > 100 {
                 isRefreshing = true
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                     withAnimation {
                         self.isRefreshing = false
+                        self.visibleRefreshOffset = .zero
                     }
                 }
             }
