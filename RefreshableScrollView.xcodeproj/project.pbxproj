@@ -12,6 +12,8 @@
 		A798AB0127A7324A0012CE2F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A798AB0027A7324A0012CE2F /* Assets.xcassets */; };
 		A798AB0427A7324A0012CE2F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A798AB0327A7324A0012CE2F /* Preview Assets.xcassets */; };
 		A798AB0B27A732D90012CE2F /* RefreshableScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A798AB0A27A732D90012CE2F /* RefreshableScrollView.swift */; };
+		A7DE78E927AE724300007F7F /* ScrollOffsetPreferenceTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7DE78E827AE724300007F7F /* ScrollOffsetPreferenceTypes.swift */; };
+		A7DE78EB27AE73B500007F7F /* ScrollOffsetPreferenceModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7DE78EA27AE73B500007F7F /* ScrollOffsetPreferenceModifier.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +23,8 @@
 		A798AB0027A7324A0012CE2F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A798AB0327A7324A0012CE2F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		A798AB0A27A732D90012CE2F /* RefreshableScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshableScrollView.swift; sourceTree = "<group>"; };
+		A7DE78E827AE724300007F7F /* ScrollOffsetPreferenceTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollOffsetPreferenceTypes.swift; sourceTree = "<group>"; };
+		A7DE78EA27AE73B500007F7F /* ScrollOffsetPreferenceModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollOffsetPreferenceModifier.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +60,8 @@
 				A798AAFC27A732470012CE2F /* RefreshableScrollViewApp.swift */,
 				A798AAFE27A732470012CE2F /* ContentView.swift */,
 				A798AB0A27A732D90012CE2F /* RefreshableScrollView.swift */,
+				A7DE78E827AE724300007F7F /* ScrollOffsetPreferenceTypes.swift */,
+				A7DE78EA27AE73B500007F7F /* ScrollOffsetPreferenceModifier.swift */,
 				A798AB0027A7324A0012CE2F /* Assets.xcassets */,
 				A798AB0227A7324A0012CE2F /* Preview Content */,
 			);
@@ -140,8 +146,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A7DE78EB27AE73B500007F7F /* ScrollOffsetPreferenceModifier.swift in Sources */,
 				A798AAFF27A732470012CE2F /* ContentView.swift in Sources */,
 				A798AAFD27A732470012CE2F /* RefreshableScrollViewApp.swift in Sources */,
+				A7DE78E927AE724300007F7F /* ScrollOffsetPreferenceTypes.swift in Sources */,
 				A798AB0B27A732D90012CE2F /* RefreshableScrollView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

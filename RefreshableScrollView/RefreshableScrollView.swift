@@ -19,19 +19,9 @@ struct RefreshableScrollView: View {
         ZStack(alignment: .top) {
             Color.orange
                 .frame(height: refreshContentHeight)
-            GeometryReader { staticViewProxy in
-                Color.clear
-                    .preference(
-                        key: ScrollOffsetPreferenceTypes.Key.self,
-                        value: [
-                            .init(
-                                type: .static,
-                                offset: staticViewProxy.frame(in: .global).minY
-                            )
-                        ]
-                    )
-                    .hidden()
-            }
+            Color.clear
+                .hidden()
+                .scrollOffsetPreference(.static)
             ScrollView {
                 VStack(spacing: 0) {
                     Color.clear
@@ -44,17 +34,7 @@ struct RefreshableScrollView: View {
                     }
                     Text("Content offset: \(scrollViewOffset)")
                 }
-                .background(
-                    GeometryReader { proxy in
-                        Color.clear
-                            .preference(
-                                key: ScrollOffsetPreferenceTypes.Key.self,
-                                value: [
-                                    .init(type: .scrollable, offset: proxy.frame(in: .global).minY)
-                                ]
-                            )
-                    }
-                )
+                .scrollOffsetPreference(.scrollable)
             }
         }
         .onPreferenceChange(ScrollOffsetPreferenceTypes.Key.self) { values in
@@ -76,27 +56,6 @@ struct RefreshableScrollView: View {
                     }
                 }
             }
-        }
-    }
-}
-
-struct ScrollOffsetPreferenceTypes {
-    
-    struct Data: Equatable {
-        var type: ViewType
-        var offset: CGFloat
-    }
-    
-    enum ViewType {
-        case `static`
-        case scrollable
-    }
-    
-    struct Key: PreferenceKey {
-        static var defaultValue: [Data] = []
-        
-        static func reduce(value: inout [Data], nextValue: () -> [Data]) {
-            value.append(contentsOf: nextValue())
         }
     }
 }
