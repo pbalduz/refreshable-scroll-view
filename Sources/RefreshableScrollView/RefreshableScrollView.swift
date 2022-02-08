@@ -1,6 +1,7 @@
-public struct refreshable_scroll_view {
-    public private(set) var text = "Hello, World!"
+import SwiftUI
 
-    public init() {
+struct RefreshableScrollView: View {
+    var body: some View {
+        Text("refreshable-scroll-view")
     }
 }
