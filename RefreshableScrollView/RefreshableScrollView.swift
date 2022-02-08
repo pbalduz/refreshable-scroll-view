@@ -37,16 +37,8 @@ struct RefreshableScrollView: View {
                 .scrollOffsetPreference(.scrollable)
             }
         }
-        .onPreferenceChange(ScrollOffsetPreferenceTypes.Key.self) { values in
-            guard
-                let first = values.first(where: { $0.type == .static }),
-                let last = values.last(where: { $0.type == .scrollable })
-            else {
-                scrollViewOffset = 0
-                return
-            }
-            scrollViewOffset = last.offset - first.offset
-            
+        .onScrollOffsetChange { offset in
+            scrollViewOffset = offset
             if scrollViewOffset > threshold {
                 guard !isRefreshing else { return }
                 isRefreshing = true
