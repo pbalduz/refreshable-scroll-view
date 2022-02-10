@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct RefreshableScrollView<Content: View>: View {
+struct RefreshableScrollView<Content: View, RefreshContent: View>: View {
     @State private var isRefreshing: Bool = false
     @State private var scrollViewOffset: CGFloat = .zero
     
@@ -16,14 +16,19 @@ struct RefreshableScrollView<Content: View>: View {
     }
     
     @ViewBuilder var content: () -> Content
+    @ViewBuilder var refreshContent: () -> RefreshContent
     
-    init(@ViewBuilder content: @escaping () -> Content) {
+    init(
+        @ViewBuilder content: @escaping () -> Content,
+        @ViewBuilder refreshContent: @escaping () -> RefreshContent
+    ) {
         self.content = content
+        self.refreshContent = refreshContent
     }
     
     var body: some View {
         ZStack(alignment: .top) {
-            Color.orange
+            refreshContent()
                 .frame(height: refreshContentHeight)
             Color.clear
                 .hidden()
@@ -62,6 +67,8 @@ struct RefreshableScrollView_Previews: PreviewProvider {
                         .frame(height: 60)
                 }
             }
+        } refreshContent: {
+            Color.blue
         }
     }
 }
