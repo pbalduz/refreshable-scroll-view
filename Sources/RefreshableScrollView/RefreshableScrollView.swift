@@ -44,7 +44,6 @@ struct RefreshableScrollView<Content: View, RefreshContent: View>: View {
                     Color.clear
                         .frame(height: visibleRefreshOffset)
                     content()
-                    Text("Content offset: \(scrollViewOffset)")
                 }
                 .scrollOffsetPreference(.scrollable)
             }
