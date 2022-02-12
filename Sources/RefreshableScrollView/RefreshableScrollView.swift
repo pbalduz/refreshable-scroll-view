@@ -2,16 +2,16 @@ import SwiftUI
 
 struct RefreshableScrollView<Content: View, RefreshContent: View>: View {
     @State private var isRefreshing: Bool = false
+    @State private var refreshContentSize: CGSize = .zero
     @State private var scrollViewOffset: CGFloat = .zero
     
-    private var refreshContentHeight: CGFloat = 60
     private var threshold: CGFloat = 100
     
     private var visibleRefreshOffset: CGFloat {
         guard isRefreshing else { return .zero }
         return max(
             0,
-            refreshContentHeight - refreshContentHeight * scrollViewOffset / (refreshContentHeight + 30)
+            refreshContentSize.height - refreshContentSize.height * scrollViewOffset / (refreshContentSize.height + 30)
         )
     }
     
@@ -28,8 +28,9 @@ struct RefreshableScrollView<Content: View, RefreshContent: View>: View {
     
     var body: some View {
         ZStack(alignment: .top) {
-            refreshContent()
-                .frame(height: refreshContentHeight)
+            ChildSizeReader(contentSize: $refreshContentSize) {
+                refreshContent()
+            }
             Color.clear
                 .hidden()
                 .scrollOffsetPreference(.static)
@@ -69,6 +70,7 @@ struct RefreshableScrollView_Previews: PreviewProvider {
             }
         } refreshContent: {
             Color.blue
+                .frame(height: 60)
         }
     }
 }
