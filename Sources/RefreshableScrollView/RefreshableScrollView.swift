@@ -5,7 +5,9 @@ struct RefreshableScrollView<Content: View, RefreshContent: View>: View {
     @State private var refreshContentSize: CGSize = .zero
     @State private var scrollViewOffset: CGFloat = .zero
     
-    private var threshold: CGFloat = 100
+    private var threshold: CGFloat {
+        max(refreshContentSize.height, refreshThreshold)
+    }
     
     private var visibleRefreshOffset: CGFloat {
         guard isRefreshing else { return .zero }
@@ -17,13 +19,16 @@ struct RefreshableScrollView<Content: View, RefreshContent: View>: View {
     
     @ViewBuilder var content: () -> Content
     @ViewBuilder var refreshContent: () -> RefreshContent
+    var refreshThreshold: CGFloat
     
     init(
+        refreshThreshold: CGFloat = 100,
         @ViewBuilder content: @escaping () -> Content,
         @ViewBuilder refreshContent: @escaping () -> RefreshContent
     ) {
         self.content = content
         self.refreshContent = refreshContent
+        self.refreshThreshold = refreshThreshold
     }
     
     var body: some View {
