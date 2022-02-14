@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct RefreshableScrollView<Content: View, RefreshContent: View>: View {
-    @State private var isRefreshing: Bool = false
     @State private var refreshContentSize: CGSize = .zero
     @State private var scrollViewOffset: CGFloat = .zero
     
@@ -18,15 +17,18 @@ struct RefreshableScrollView<Content: View, RefreshContent: View>: View {
     }
     
     @ViewBuilder var content: () -> Content
+    @Binding var isRefreshing: Bool
     @ViewBuilder var refreshContent: () -> RefreshContent
     var refreshThreshold: CGFloat
     
     init(
+        isRefreshing: Binding<Bool>,
         refreshThreshold: CGFloat = 100,
         @ViewBuilder content: @escaping () -> Content,
         @ViewBuilder refreshContent: @escaping () -> RefreshContent
     ) {
         self.content = content
+        self._isRefreshing = isRefreshing
         self.refreshContent = refreshContent
         self.refreshThreshold = refreshThreshold
     }
@@ -53,21 +55,19 @@ struct RefreshableScrollView<Content: View, RefreshContent: View>: View {
             if scrollViewOffset > threshold {
                 guard !isRefreshing else { return }
                 isRefreshing = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    withAnimation {
-                        self.isRefreshing = false
-                    }
-                }
             }
         }
     }
 }
 
-struct RefreshableScrollView_Previews: PreviewProvider {
-    static var previews: some View {
-        RefreshableScrollView {
+struct RefreshableScrollViewPreviewContent: View {
+    @State var isRefreshing: Bool = false
+    @State var itemsCount: Int = 1
+    
+    var body: some View{
+        RefreshableScrollView(isRefreshing: $isRefreshing) {
             VStack {
-                ForEach(0...2, id: \.self) { _ in
+                ForEach(0...itemsCount, id: \.self) { _ in
                     Color.pink
                         .frame(height: 60)
                 }
@@ -76,5 +76,20 @@ struct RefreshableScrollView_Previews: PreviewProvider {
             Color.blue
                 .frame(height: 60)
         }
+        .onChange(of: isRefreshing) { newValue in
+            guard newValue else { return }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                withAnimation {
+                    self.itemsCount += 1
+                    self.isRefreshing = false
+                }
+            }
+        }
+    }
+}
+
+struct RefreshableScrollView_Previews: PreviewProvider {
+    static var previews: some View {
+        RefreshableScrollViewPreviewContent()
     }
 }
