@@ -1,8 +1,13 @@
 import SwiftUI
 
 struct RefreshableScrollView<Content: View, RefreshContent: View>: View {
+    @State private var isRefreshEnabled: Bool = true
     @State private var refreshContentSize: CGSize = .zero
     @State private var scrollViewOffset: CGFloat = .zero
+    
+    private var contentOffset: CGFloat {
+        scrollViewOffset + visibleRefreshOffset
+    }
     
     private var threshold: CGFloat {
         max(refreshContentSize.height, refreshThreshold)
@@ -52,9 +57,11 @@ struct RefreshableScrollView<Content: View, RefreshContent: View>: View {
         }
         .onScrollOffsetChange { offset in
             scrollViewOffset = offset
+            if contentOffset == 0 { isRefreshEnabled = true }
             if scrollViewOffset > threshold {
-                guard !isRefreshing else { return }
+                guard !isRefreshing, isRefreshEnabled else { return }
                 isRefreshing = true
+                isRefreshEnabled = false
             }
         }
     }
