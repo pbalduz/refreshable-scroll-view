@@ -17,7 +17,10 @@ struct RefreshableScrollView<Content: View, RefreshContent: View>: View {
         guard isRefreshing else { return .zero }
         return max(
             0,
-            refreshContentSize.height - refreshContentSize.height * scrollViewOffset / (refreshContentSize.height + 30)
+            min(
+                refreshContentSize.height,
+                refreshContentSize.height - refreshContentSize.height * scrollViewOffset / (refreshContentSize.height + 30)
+            )
         )
     }
     
