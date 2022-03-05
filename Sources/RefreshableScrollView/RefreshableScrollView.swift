@@ -60,11 +60,15 @@ public struct RefreshableScrollView<Content: View, RefreshContent: View>: View {
         }
         .onScrollOffsetChange { offset in
             scrollViewOffset = offset
-            if contentOffset == 0 { isRefreshEnabled = true }
             if scrollViewOffset > threshold {
                 guard !isRefreshing, isRefreshEnabled else { return }
                 isRefreshing = true
                 isRefreshEnabled = false
+            }
+        }
+        .onChange(of: contentOffset) { newValue in
+            if contentOffset == 0 {
+                isRefreshEnabled = true
             }
         }
     }
