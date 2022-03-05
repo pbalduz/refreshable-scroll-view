@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A752BAE427D3D90700842B77 /* RefreshableScrollView in Frameworks */ = {isa = PBXBuildFile; productRef = A752BAE327D3D90700842B77 /* RefreshableScrollView */; };
 		A7F4E41B27BDB1830046B035 /* ExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F4E41A27BDB1830046B035 /* ExampleApp.swift */; };
 		A7F4E41D27BDB1830046B035 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F4E41C27BDB1830046B035 /* ContentView.swift */; };
 		A7F4E41F27BDB1850046B035 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A7F4E41E27BDB1850046B035 /* Assets.xcassets */; };
@@ -14,6 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A752BAE127D3D8F700842B77 /* refreshable-scroll-view */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "refreshable-scroll-view"; path = ..; sourceTree = "<group>"; };
 		A7F4E41727BDB1830046B035 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7F4E41A27BDB1830046B035 /* ExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleApp.swift; sourceTree = "<group>"; };
 		A7F4E41C27BDB1830046B035 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -26,17 +28,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A752BAE427D3D90700842B77 /* RefreshableScrollView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A752BAE227D3D90700842B77 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		A7F4E40E27BDB1830046B035 = {
 			isa = PBXGroup;
 			children = (
+				A752BAE127D3D8F700842B77 /* refreshable-scroll-view */,
 				A7F4E41927BDB1830046B035 /* Example */,
 				A7F4E41827BDB1830046B035 /* Products */,
+				A752BAE227D3D90700842B77 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -83,6 +95,9 @@
 			dependencies = (
 			);
 			name = Example;
+			packageProductDependencies = (
+				A752BAE327D3D90700842B77 /* RefreshableScrollView */,
+			);
 			productName = Example;
 			productReference = A7F4E41727BDB1830046B035 /* Example.app */;
 			productType = "com.apple.product-type.application";
@@ -339,6 +354,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A752BAE327D3D90700842B77 /* RefreshableScrollView */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RefreshableScrollView;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A7F4E40F27BDB1830046B035 /* Project object */;
 }

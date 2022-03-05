@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct RefreshableScrollView<Content: View, RefreshContent: View>: View {
+public struct RefreshableScrollView<Content: View, RefreshContent: View>: View {
     @State private var isRefreshEnabled: Bool = true
     @State private var refreshContentSize: CGSize = .zero
     @State private var scrollViewOffset: CGFloat = .zero
@@ -29,7 +29,7 @@ struct RefreshableScrollView<Content: View, RefreshContent: View>: View {
     @ViewBuilder var refreshContent: () -> RefreshContent
     var refreshThreshold: CGFloat
     
-    init(
+    public init(
         isRefreshing: Binding<Bool>,
         refreshThreshold: CGFloat = 100,
         @ViewBuilder content: @escaping () -> Content,
@@ -41,7 +41,7 @@ struct RefreshableScrollView<Content: View, RefreshContent: View>: View {
         self.refreshThreshold = refreshThreshold
     }
     
-    var body: some View {
+    public var body: some View {
         ZStack(alignment: .top) {
             ChildSizeReader(contentSize: $refreshContentSize) {
                 refreshContent()
