@@ -1,85 +1,85 @@
 import SwiftUI
 
+enum RefreshingState {
+    case initial, ready, loading
+}
+
 public struct RefreshableScrollView<Content: View, RefreshContent: View>: View {
-    @State private var isRefreshEnabled: Bool = true
     @State private var refreshContentSize: CGSize = .zero
     @State private var scrollViewOffset: CGFloat = .zero
+    @State private var state: RefreshingState = .initial
     
-    private var contentOffset: CGFloat {
-        scrollViewOffset + visibleRefreshOffset
-    }
+    /// This is used to make the scroll animation smoother when realeased for loading
+    private let thresholdConstant: CGFloat = 30
     
     private var threshold: CGFloat {
-        max(refreshContentSize.height, refreshThreshold)
+        max(refreshContentSize.height + thresholdConstant, refreshThreshold)
     }
     
     private var visibleRefreshOffset: CGFloat {
-        guard isRefreshing else { return .zero }
+        guard state != .initial else { return .zero }
         return max(
             0,
             min(
                 refreshContentSize.height,
-                refreshContentSize.height - refreshContentSize.height * scrollViewOffset / (refreshContentSize.height + 30)
+                refreshContentSize.height - refreshContentSize.height * scrollViewOffset / (refreshContentSize.height + thresholdConstant)
             )
         )
     }
     
-    @ViewBuilder var content: () -> Content
-    @Binding var isRefreshing: Bool
-    @ViewBuilder var refreshContent: () -> RefreshContent
+    var content: () -> Content
+    var refreshContent: () -> RefreshContent
     var refreshThreshold: CGFloat
     
     public init(
-        isRefreshing: Binding<Bool>,
-        refreshThreshold: CGFloat = 100,
+        refreshThreshold: CGFloat = 70,
         @ViewBuilder content: @escaping () -> Content,
         @ViewBuilder refreshContent: @escaping () -> RefreshContent
     ) {
         self.content = content
-        self._isRefreshing = isRefreshing
         self.refreshContent = refreshContent
         self.refreshThreshold = refreshThreshold
     }
     
     public var body: some View {
-        ZStack(alignment: .top) {
-            ChildSizeReader(contentSize: $refreshContentSize) {
-                refreshContent()
-            }
-            Color.clear
-                .hidden()
-                .scrollOffsetPreference(.static)
-            ScrollView {
+        ScrollView {
+            ZStack(alignment: .top) {
+                Color.clear
+                    .hidden()
+                    .scrollOffsetPreference(.scrollable)
+                ChildSizeReader(contentSize: $refreshContentSize) {
+                    refreshContent()
+                        .offset(y: -scrollViewOffset)
+                }
                 VStack(spacing: 0) {
                     Color.clear
                         .frame(height: visibleRefreshOffset)
                     content()
                 }
-                .scrollOffsetPreference(.scrollable)
             }
         }
+        .scrollOffsetPreference(.static)
         .onScrollOffsetChange { offset in
             scrollViewOffset = offset
-            if scrollViewOffset > threshold {
-                guard !isRefreshing, isRefreshEnabled else { return }
-                isRefreshing = true
-                isRefreshEnabled = false
-            }
-        }
-        .onChange(of: contentOffset) { newValue in
-            if contentOffset == 0 {
-                isRefreshEnabled = true
+            if offset > threshold && state == .initial {
+                state = .ready
+            } else if offset < threshold && state == .ready {
+                state = .loading
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    withAnimation {
+                        state = .initial
+                    }
+                }
             }
         }
     }
 }
 
 struct RefreshableScrollViewPreviewContent: View {
-    @State var isRefreshing: Bool = false
     @State var itemsCount: Int = 1
     
     var body: some View{
-        RefreshableScrollView(isRefreshing: $isRefreshing) {
+        RefreshableScrollView {
             VStack {
                 ForEach(0...itemsCount, id: \.self) { _ in
                     Color.pink
@@ -88,16 +88,7 @@ struct RefreshableScrollViewPreviewContent: View {
             }
         } refreshContent: {
             Color.blue
-                .frame(height: 60)
-        }
-        .onChange(of: isRefreshing) { newValue in
-            guard newValue else { return }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                withAnimation {
-                    self.itemsCount += 1
-                    self.isRefreshing = false
-                }
-            }
+                .frame(height: 30)
         }
     }
 }

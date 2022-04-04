@@ -11,36 +11,20 @@ import RefreshableScrollView
 struct ContentView: View {
     @State var isRefreshing: Bool = false
     
-    @State var colors: [Color] = []
+    @State var colors: [Color] = [.random, .random, .random]
     
     var body: some View{
-        RefreshableScrollView(
-            isRefreshing: $isRefreshing,
-            content: {
-                VStack {
-                    ForEach(colors, id: \.self) { color in
-                        color
-                            .frame(height: 60)
-                    }
-                }
-            },
-            refreshContent: {
-                Text("Pull to refresh")
-                    .font(.body)
-                    .padding(.vertical)
-            }
-        )
-        .onChange(of: isRefreshing) { newValue in
-            guard newValue else { return }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                withAnimation {
-                    randomColors()
-                    isRefreshing = false
+        RefreshableScrollView {
+            VStack {
+                ForEach(colors, id: \.self) { color in
+                    color
+                        .frame(height: 60)
                 }
             }
-        }
-        .onAppear {
-            randomColors()
+        } refreshContent: {
+            Text("Pull to refresh")
+                .font(.body)
+                .padding(.vertical)
         }
     }
     
