@@ -4,7 +4,9 @@ enum RefreshingState {
     case initial, ready, loading
 }
 
-public struct RefreshableScrollView<Content: View, RefreshContent: View>: View {
+public typealias RefreshAction = (@escaping () -> Void) -> Void
+
+public struct RefreshableScrollView<Content, RefreshContent>: View where Content: View, RefreshContent: View {
     @State private var refreshContentSize: CGSize = .zero
     @State private var scrollViewOffset: CGFloat = .zero
     @State private var state: RefreshingState = .initial
@@ -29,15 +31,18 @@ public struct RefreshableScrollView<Content: View, RefreshContent: View>: View {
     
     var content: () -> Content
     var refreshContent: () -> RefreshContent
+    var onRefresh: RefreshAction
     var refreshThreshold: CGFloat
     
     public init(
+        onRefresh: @escaping RefreshAction,
         refreshThreshold: CGFloat = 70,
         @ViewBuilder content: @escaping () -> Content,
         @ViewBuilder refreshContent: @escaping () -> RefreshContent
     ) {
         self.content = content
         self.refreshContent = refreshContent
+        self.onRefresh = onRefresh
         self.refreshThreshold = refreshThreshold
     }
     
@@ -65,7 +70,7 @@ public struct RefreshableScrollView<Content: View, RefreshContent: View>: View {
                 state = .ready
             } else if offset < threshold && state == .ready {
                 state = .loading
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                onRefresh {
                     withAnimation {
                         state = .initial
                     }
@@ -79,7 +84,11 @@ struct RefreshableScrollViewPreviewContent: View {
     @State var itemsCount: Int = 1
     
     var body: some View{
-        RefreshableScrollView {
+        RefreshableScrollView { finished in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                finished()
+            }
+        } content: {
             VStack {
                 ForEach(0...itemsCount, id: \.self) { _ in
                     Color.pink

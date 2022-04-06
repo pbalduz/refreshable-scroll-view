@@ -14,7 +14,12 @@ struct ContentView: View {
     @State var colors: [Color] = [.random, .random, .random]
     
     var body: some View{
-        RefreshableScrollView {
+        RefreshableScrollView { finished in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                randomColors()
+                finished()
+            }
+        } content: {
             VStack {
                 ForEach(colors, id: \.self) { color in
                     color
