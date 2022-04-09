@@ -1,9 +1,5 @@
 import SwiftUI
 
-enum RefreshingState {
-    case initial, ready, loading
-}
-
 public typealias RefreshAction = (@escaping () -> Void) -> Void
 
 public struct RefreshableScrollView<Content, RefreshContent>: View where Content: View, RefreshContent: View {
@@ -11,7 +7,7 @@ public struct RefreshableScrollView<Content, RefreshContent>: View where Content
     @State private var scrollViewOffset: CGFloat = .zero
     @State private var state: RefreshingState = .initial
     
-    /// This is used to make the scroll animation smoother when realeased for loading
+    /// Used to make the scroll animation smoother when realeased for loading
     private let thresholdConstant: CGFloat = 30
     
     private var threshold: CGFloat {
@@ -65,20 +61,24 @@ public struct RefreshableScrollView<Content, RefreshContent>: View where Content
         }
         .scrollOffsetPreference(.static)
         .onScrollOffsetChange { offset in
-            scrollViewOffset = offset
-            if offset > threshold && state == .initial {
-                state = .ready
-            } else if offset < threshold && state == .ready {
-                state = .loading
-                onRefresh {
-                    withAnimation {
-                        state = .initial
+            DispatchQueue.main.async {
+                scrollViewOffset = offset
+                if offset > threshold && state == .initial {
+                    state = .ready
+                } else if offset < threshold && state == .ready {
+                    state = .loading
+                    onRefresh {
+                        withAnimation {
+                            state = .initial
+                        }
                     }
                 }
             }
         }
     }
 }
+
+// MARK: - Previews
 
 struct RefreshableScrollViewPreviewContent: View {
     @State var itemsCount: Int = 1
