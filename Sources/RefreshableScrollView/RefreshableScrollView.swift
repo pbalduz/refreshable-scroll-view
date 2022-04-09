@@ -1,7 +1,5 @@
 import SwiftUI
 
-public typealias RefreshAction = (@escaping () -> Void) -> Void
-
 public struct RefreshableScrollView<Content, RefreshContent>: View where Content: View, RefreshContent: View {
     @State private var refreshContentSize: CGSize = .zero
     @State private var scrollViewOffset: CGFloat = .zero
