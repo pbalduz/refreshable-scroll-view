@@ -26,7 +26,7 @@ struct ContentView: View {
                         .frame(height: 60)
                 }
             }
-        } refreshContent: {
+        } refreshContent: { _ in
             Text("Pull to refresh")
                 .font(.body)
                 .padding(.vertical)

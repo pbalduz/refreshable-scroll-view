@@ -1,4 +1,4 @@
-enum RefreshingState {
+public enum RefreshingState {
     case initial, ready, loading
 }
 

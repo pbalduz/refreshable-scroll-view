@@ -23,8 +23,10 @@ public struct RefreshableScrollView<Content, RefreshContent>: View where Content
         )
     }
     
+    private let feedbackGenerator = UINotificationFeedbackGenerator()
+    
     var content: () -> Content
-    var refreshContent: () -> RefreshContent
+    var refreshContent: (RefreshingState) -> RefreshContent
     var onRefresh: RefreshAction
     var refreshThreshold: CGFloat
     
@@ -32,7 +34,7 @@ public struct RefreshableScrollView<Content, RefreshContent>: View where Content
         onRefresh: @escaping RefreshAction,
         refreshThreshold: CGFloat = 70,
         @ViewBuilder content: @escaping () -> Content,
-        @ViewBuilder refreshContent: @escaping () -> RefreshContent
+        @ViewBuilder refreshContent: @escaping (RefreshingState) -> RefreshContent
     ) {
         self.content = content
         self.refreshContent = refreshContent
@@ -47,7 +49,7 @@ public struct RefreshableScrollView<Content, RefreshContent>: View where Content
                     .hidden()
                     .scrollOffsetPreference(.scrollable)
                 ChildSizeReader(contentSize: $refreshContentSize) {
-                    refreshContent()
+                    refreshContent(state)
                         .offset(y: -scrollViewOffset)
                 }
                 VStack(spacing: 0) {
@@ -63,6 +65,7 @@ public struct RefreshableScrollView<Content, RefreshContent>: View where Content
                 scrollViewOffset = offset
                 if offset > threshold && state == .initial {
                     state = .ready
+                    feedbackGenerator.notificationOccurred(.success)
                 } else if offset < threshold && state == .ready {
                     state = .loading
                     onRefresh {
@@ -81,6 +84,16 @@ public struct RefreshableScrollView<Content, RefreshContent>: View where Content
 struct RefreshableScrollViewPreviewContent: View {
     @State var itemsCount: Int = 1
     
+    var messageForState: (RefreshingState) -> String {
+        return { state in
+            switch state {
+            case .initial: return "Pull to refresh"
+            case .ready: return "Release to reload"
+            case .loading: return "Loading"
+            }
+        }
+    }
+    
     var body: some View{
         RefreshableScrollView { finished in
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
@@ -93,8 +106,8 @@ struct RefreshableScrollViewPreviewContent: View {
                         .frame(height: 60)
                 }
             }
-        } refreshContent: {
-            Color.blue
+        } refreshContent: { refreshState in
+            Text(messageForState(refreshState))
                 .frame(height: 30)
         }
     }
